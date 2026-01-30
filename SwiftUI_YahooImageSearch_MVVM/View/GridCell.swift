@@ -41,8 +41,8 @@ final class ImageContainer: ObservableObject {
 
     // @PublishedをつけるとSwiftUIのViewへデータが更新されたことを通知してくれる
     @Published var image = UIImage(systemName: "photo")!
+    @Published var isLoaded = false
     private let url: URL
-    private var isLoaded = false
 
     init(from url: URL) {
         self.url = url

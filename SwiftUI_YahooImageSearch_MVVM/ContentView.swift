@@ -39,14 +39,35 @@ struct ContentView: View {
                 
                 Spacer()
                 
-                // 検索結果の表示
-                QGrid(viewModel.imageDatas, columns: 3,
-                      columnsInLandscape: 5,
-                      vSpacing: 16, hSpacing: 8,
-                      vPadding: 16, hPadding: 16,
-                      isScrollable: true, showScrollIndicators: false
-                ) { data in
-                    GridCell(imageData: data, container: ImageContainer(from: data.url))
+                if viewModel.imageDatas.isEmpty && viewModel.hasSearched && !viewModel.showLoadingIndicator {
+                        // 1. 検索結果が空の場合
+                        VStack(spacing: 20) {
+                            Image(systemName: "magnifyingglass")
+                                .font(.system(size: 50))
+                                .foregroundColor(.gray)
+                            Text("\"\(viewModel.searchText)\" に一致する画像は見つかりませんでした")
+                                .foregroundColor(.secondary)
+                        }
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                } else {
+                    // 検索結果の表示
+                    QGrid(viewModel.imageDatas, columns: 3,
+                          columnsInLandscape: 5,
+                          vSpacing: 16, hSpacing: 8,
+                          vPadding: 16, hPadding: 16,
+                          isScrollable: true, showScrollIndicators: false
+                    ) { data in
+                        GridCell(imageData: data, container: ImageContainer(from: data.url))
+                        .onTapGesture {
+                            // タップした画像をセットしてフラグをオン
+                            viewModel.selectedImageData = data
+                            viewModel.isShowingDetail = true
+                        }
+                    }
+                    .fullScreenCover(isPresented: $viewModel.isShowingDetail) {
+                        // 全画面表示を呼び出し
+                        ImageDetailView(images: viewModel.imageDatas, selectedImage: $viewModel.selectedImageData)
+                    }
                 }
             }
             

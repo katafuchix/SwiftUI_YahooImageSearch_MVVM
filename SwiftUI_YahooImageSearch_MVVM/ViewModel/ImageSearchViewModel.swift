@@ -16,6 +16,10 @@ class ImageSearchViewModel: ObservableObject {
     @Published var isLoading = false
     @Published var showLoadingIndicator = false
     @Published var isButtonEnabled = false
+    // 検索後の状態を整理するためのフラグを追加
+    @Published var hasSearched = false // 一度でも検索を実行したか
+    @Published var selectedImageData: ImageData? = nil // これが非nilなら全画面表示
+    @Published var isShowingDetail = false           // 全画面表示のフラグ
     
     private var cancellables = Set<AnyCancellable>()
     private let imageLoader = ImageLoader()
@@ -25,6 +29,19 @@ class ImageSearchViewModel: ObservableObject {
         $searchText
             .map { $0.count >= 3 }
             .assign(to: \.isButtonEnabled, on: self)
+            .store(in: &cancellables)
+        
+        // Debounce機能の追加
+        $searchText
+            .dropFirst() // 初期値（空文字）での発火を防ぐ
+            .debounce(for: .milliseconds(500), scheduler: RunLoop.main) // 0.5秒待つ
+            .removeDuplicates() // 同じ文字での連続発火を防ぐ
+            .sink { [weak self] _ in
+                // 文字数が足りている場合のみ、自動で検索を実行
+                if self?.isButtonEnabled == true {
+                    self?.search()
+                }
+            }
             .store(in: &cancellables)
     }
     
@@ -49,6 +66,7 @@ class ImageSearchViewModel: ObservableObject {
         // 1. 検索開始：状態のリセットとインジケーターの表示
         self.imageDatas = []
         self.showLoadingIndicator = true
+        self.hasSearched = false // 検索開始時にリセット
         
         do {
             // 2. ImageLoaderのasync版を呼び出し、完了まで待機
@@ -65,6 +83,7 @@ class ImageSearchViewModel: ObservableObject {
         // 5. 成功・失敗どちらでもインジケーターを止める
         // do-catchの外に書くことで、確実に実行される
         self.showLoadingIndicator = false
+        self.hasSearched = true // 検索完了（成功・失敗問わず）
     }
 
     // iOS 15以前 (既存のロジック：クロージャ形式)
@@ -72,6 +91,7 @@ class ImageSearchViewModel: ObservableObject {
         // 1. 検索開始：状態のリセットとインジケーターの表示
         self.imageDatas = []
         self.showLoadingIndicator = true
+        self.hasSearched = false // 検索開始時にリセット
         
         // 2. ImageLoaderのクロージャ版を呼び出す
         imageLoader.searchLegacy(searchText) { [weak self] result in
@@ -90,6 +110,7 @@ class ImageSearchViewModel: ObservableObject {
                 }
                 // 4. 成功・失敗どちらでもインジケーターを止める
                 self.showLoadingIndicator = false
+                self.hasSearched = true // 検索完了（成功・失敗問わず）
             }
         }
     }

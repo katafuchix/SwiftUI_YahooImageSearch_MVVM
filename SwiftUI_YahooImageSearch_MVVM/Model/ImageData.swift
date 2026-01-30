@@ -6,13 +6,23 @@
 //
 
 import Foundation
+import UIKit
 
 // 表示データ用モデル
 // QGridで表示するためにはIdentifiableが必要
 
-struct ImageData: Identifiable {
+struct ImageData: Identifiable, Hashable {
     var id = UUID()
     let url: URL
+
+    // URLが同じなら同じデータとみなす設定
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(url)
+    }
+    
+    static func == (lhs: ImageData, rhs: ImageData) -> Bool {
+        lhs.url == rhs.url
+    }
 }
 
 // エラー
