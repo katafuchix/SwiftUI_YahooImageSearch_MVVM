@@ -6,6 +6,11 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		318549382F2D13D4009BA0B2 /* QGrid in Frameworks */ = {isa = PBXBuildFile; productRef = 318549372F2D13D4009BA0B2 /* QGrid */; };
+		3185493B2F2D144B009BA0B2 /* ActivityIndicatorView in Frameworks */ = {isa = PBXBuildFile; productRef = 3185493A2F2D144B009BA0B2 /* ActivityIndicatorView */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXFileReference section */
 		318549162F2D1090009BA0B2 /* SwiftUI_YahooImageSearch_MVVM.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SwiftUI_YahooImageSearch_MVVM.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -23,6 +28,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3185493B2F2D144B009BA0B2 /* ActivityIndicatorView in Frameworks */,
+				318549382F2D13D4009BA0B2 /* QGrid in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -65,6 +72,8 @@
 			);
 			name = SwiftUI_YahooImageSearch_MVVM;
 			packageProductDependencies = (
+				318549372F2D13D4009BA0B2 /* QGrid */,
+				3185493A2F2D144B009BA0B2 /* ActivityIndicatorView */,
 			);
 			productName = SwiftUI_YahooImageSearch_MVVM;
 			productReference = 318549162F2D1090009BA0B2 /* SwiftUI_YahooImageSearch_MVVM.app */;
@@ -94,6 +103,10 @@
 			);
 			mainGroup = 3185490D2F2D108F009BA0B2;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				318549362F2D13D4009BA0B2 /* XCRemoteSwiftPackageReference "QGrid" */,
+				318549392F2D144B009BA0B2 /* XCRemoteSwiftPackageReference "ActivityIndicatorView" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 318549172F2D1090009BA0B2 /* Products */;
 			projectDirPath = "";
@@ -332,6 +345,38 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		318549362F2D13D4009BA0B2 /* XCRemoteSwiftPackageReference "QGrid" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/Q-Mobile/QGrid";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.1.4;
+			};
+		};
+		318549392F2D144B009BA0B2 /* XCRemoteSwiftPackageReference "ActivityIndicatorView" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/exyte/ActivityIndicatorView";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.2.1;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		318549372F2D13D4009BA0B2 /* QGrid */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 318549362F2D13D4009BA0B2 /* XCRemoteSwiftPackageReference "QGrid" */;
+			productName = QGrid;
+		};
+		3185493A2F2D144B009BA0B2 /* ActivityIndicatorView */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 318549392F2D144B009BA0B2 /* XCRemoteSwiftPackageReference "ActivityIndicatorView" */;
+			productName = ActivityIndicatorView;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 3185490E2F2D108F009BA0B2 /* Project object */;
 }
