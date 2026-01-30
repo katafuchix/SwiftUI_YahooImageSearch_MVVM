@@ -14,43 +14,50 @@ struct ContentView: View {
     @StateObject private var viewModel = ImageSearchViewModel()
     
     var body: some View {
-        VStack {
-            Spacer().frame(height: 20)
-            
-            // 検索バー
-            HStack(spacing: 20) {
+        // ZStackで背面と前面を分ける
+        ZStack {
+            // 背面：メインコンテンツ
+            VStack {
+                Spacer().frame(height: 20)
+                
+                // 検索バー
+                HStack(spacing: 20) {
+                    Spacer()
+                    TextField("検索キーワード", text: $viewModel.searchText)
+                        .textFieldStyle(RoundedBorderTextFieldStyle())
+                        .padding()
+                    Spacer()
+                }
+                
+                // 検索ボタン
+                Button(action: {
+                    viewModel.search()
+                }) {
+                    Text("Search")
+                }
+                .disabled(!viewModel.isButtonEnabled)
+                
                 Spacer()
-                TextField("検索キーワード", text: $viewModel.searchText)
-                    .textFieldStyle(RoundedBorderTextFieldStyle())
-                    .padding()
-                Spacer()
+                
+                // 検索結果の表示
+                QGrid(viewModel.imageDatas, columns: 3,
+                      columnsInLandscape: 5,
+                      vSpacing: 16, hSpacing: 8,
+                      vPadding: 16, hPadding: 16,
+                      isScrollable: true, showScrollIndicators: false
+                ) { data in
+                    GridCell(imageData: data, container: ImageContainer(from: data.url))
+                }
             }
             
-            // 検索ボタン
-            Button(action: {
-                viewModel.search()
-            }) {
-                Text("Search")
-            }
-            .disabled(!viewModel.isButtonEnabled)
-            
-            Spacer()
-            
-            // ローディング
-            ActivityIndicatorView(
-                isVisible: $viewModel.showLoadingIndicator,
-                type: .growingArc(.black)
-            )
-            .frame(width: 50.0, height: 50.0)
-            
-            // 検索結果の表示
-            QGrid(viewModel.imageDatas, columns: 3,
-                  columnsInLandscape: 5,
-                  vSpacing: 16, hSpacing: 8,
-                  vPadding: 16, hPadding: 16,
-                  isScrollable: true, showScrollIndicators: false
-            ) { data in
-                GridCell(imageData: data, container: ImageContainer(from: data.url))
+            // 前面：ローディング（isVisibleがtrueの時だけ中央に表示される）
+            if viewModel.showLoadingIndicator {
+                ActivityIndicatorView(
+                    isVisible: $viewModel.showLoadingIndicator,
+                    type: .growingArc(.black)
+                )
+                .frame(width: 50.0, height: 50.0)
+                // ZStack内ではデフォルトで中央配置になります
             }
         }
     }
