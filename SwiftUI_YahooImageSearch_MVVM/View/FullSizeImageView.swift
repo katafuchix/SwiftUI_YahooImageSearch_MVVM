@@ -11,6 +11,12 @@ struct FullSizeImageView: View {
     let url: URL
     @StateObject private var container: ImageContainer
 
+    // ズームと移動のための状態変数
+    @State private var scale: CGFloat = 1.0
+    @State private var lastScale: CGFloat = 1.0
+    @State private var offset: CGSize = .zero
+    @State private var lastOffset: CGSize = .zero
+    
     init(url: URL) {
         self.url = url
         _container = StateObject(wrappedValue: ImageContainer(from: url))
@@ -23,7 +29,39 @@ struct FullSizeImageView: View {
             Image(uiImage: container.image)
                 .resizable()
                 .aspectRatio(contentMode: .fit)
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                // 拡大と移動の適用
+                .scaleEffect(scale)
+                .offset(offset)
+                // ジェスチャー：ピンチ（拡大）
+                .gesture(
+                    MagnificationGesture()
+                        .onChanged { value in
+                            // 前回のスケールを基準に計算
+                            scale = lastScale * value
+                        }
+                        .onEnded { _ in
+                            // 指を離した時のスケールを保存
+                            lastScale = scale
+                            // 小さくなりすぎたら元に戻す
+                            if scale < 1.0 {
+                                withAnimation {
+                                    scale = 1.0
+                                    lastScale = 1.0
+                                    offset = .zero
+                                    lastOffset = .zero
+                                }
+                            }
+                        }
+                )
+                // ダブルタップでリセットする機能
+                .onTapGesture(count: 2) {
+                    withAnimation {
+                        scale = 1.0
+                        lastScale = 1.0
+                        offset = .zero
+                        lastOffset = .zero
+                    }
+                }
                 // ロード完了後、長押しで保存メニューを表示
                 .contextMenu {
                     if container.isLoaded {
