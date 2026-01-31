@@ -1,0 +1,20 @@
+# This workflow will build a Swift project
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-swift
+
+name: iOS Unit Test
+
+on: [push, pull_request]
+
+jobs:
+  test:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Select Xcode
+        run: sudo xcode-select -s /Applications/Xcode_15.4.app # 使用するバージョンに合わせる
+      - name: Run Tests
+        run: |
+          xcodebuild test \
+            -project YourProject.xcodeproj \
+            -scheme YourScheme \
+            -destination 'platform=iOS Simulator,name=iPhone 15,OS=latest'
