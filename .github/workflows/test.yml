@@ -44,7 +44,7 @@ jobs:
             xcrun xccov view --report "$RESULT_PATH" | \
               grep ".swift:" | \
               grep -v "Tests.swift:" | \
-              grep -v ".build/checkouts"
+              grep -v ".build/checkouts" || true
           else
             echo "❌ xcresult not found"
           fi
