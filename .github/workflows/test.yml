@@ -15,7 +15,11 @@ jobs:
         run: sudo xcode-select -s /Applications/Xcode_16.app/Contents/Developer
       - name: Run Tests
         run: |
+          # 利用可能なシミュレーターを1つ自動取得して変数に入れる
+          DESTINATION=$(xcrun simctl list devices available | grep "iPhone" | head -1 | sed -e 's/ (.*//' -e 's/^[ \t]*//')
+          echo "Selected Destination: $DESTINATION"
           xcodebuild test \
             -project SwiftUI_YahooImageSearch_MVVM.xcodeproj \
             -scheme SwiftUI_YahooImageSearch_MVVM \
-            -destination 'platform=iOS Simulator,name=iPhone 16'
+            -destination 'platform=iOS Simulator,name=$DESTINATION'
+            -quiet
