@@ -11,14 +11,30 @@
 		3185493B2F2D144B009BA0B2 /* ActivityIndicatorView in Frameworks */ = {isa = PBXBuildFile; productRef = 3185493A2F2D144B009BA0B2 /* ActivityIndicatorView */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		31C4547A2F2DA698005D9B83 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 3185490E2F2D108F009BA0B2 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 318549152F2D108F009BA0B2;
+			remoteInfo = SwiftUI_YahooImageSearch_MVVM;
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXFileReference section */
 		318549162F2D1090009BA0B2 /* SwiftUI_YahooImageSearch_MVVM.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SwiftUI_YahooImageSearch_MVVM.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		31C454762F2DA698005D9B83 /* SwiftUI_YahooImageSearch_MVVMTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SwiftUI_YahooImageSearch_MVVMTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		318549182F2D1090009BA0B2 /* SwiftUI_YahooImageSearch_MVVM */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = SwiftUI_YahooImageSearch_MVVM;
+			sourceTree = "<group>";
+		};
+		31C454772F2DA698005D9B83 /* SwiftUI_YahooImageSearch_MVVMTests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = SwiftUI_YahooImageSearch_MVVMTests;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -33,6 +49,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		31C454732F2DA698005D9B83 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -40,6 +63,7 @@
 			isa = PBXGroup;
 			children = (
 				318549182F2D1090009BA0B2 /* SwiftUI_YahooImageSearch_MVVM */,
+				31C454772F2DA698005D9B83 /* SwiftUI_YahooImageSearch_MVVMTests */,
 				318549172F2D1090009BA0B2 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -48,6 +72,7 @@
 			isa = PBXGroup;
 			children = (
 				318549162F2D1090009BA0B2 /* SwiftUI_YahooImageSearch_MVVM.app */,
+				31C454762F2DA698005D9B83 /* SwiftUI_YahooImageSearch_MVVMTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -79,6 +104,29 @@
 			productReference = 318549162F2D1090009BA0B2 /* SwiftUI_YahooImageSearch_MVVM.app */;
 			productType = "com.apple.product-type.application";
 		};
+		31C454752F2DA698005D9B83 /* SwiftUI_YahooImageSearch_MVVMTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 31C4547C2F2DA698005D9B83 /* Build configuration list for PBXNativeTarget "SwiftUI_YahooImageSearch_MVVMTests" */;
+			buildPhases = (
+				31C454722F2DA698005D9B83 /* Sources */,
+				31C454732F2DA698005D9B83 /* Frameworks */,
+				31C454742F2DA698005D9B83 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				31C4547B2F2DA698005D9B83 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				31C454772F2DA698005D9B83 /* SwiftUI_YahooImageSearch_MVVMTests */,
+			);
+			name = SwiftUI_YahooImageSearch_MVVMTests;
+			packageProductDependencies = (
+			);
+			productName = SwiftUI_YahooImageSearch_MVVMTests;
+			productReference = 31C454762F2DA698005D9B83 /* SwiftUI_YahooImageSearch_MVVMTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -91,6 +139,10 @@
 				TargetAttributes = {
 					318549152F2D108F009BA0B2 = {
 						CreatedOnToolsVersion = 26.2;
+					};
+					31C454752F2DA698005D9B83 = {
+						CreatedOnToolsVersion = 26.2;
+						TestTargetID = 318549152F2D108F009BA0B2;
 					};
 				};
 			};
@@ -113,12 +165,20 @@
 			projectRoot = "";
 			targets = (
 				318549152F2D108F009BA0B2 /* SwiftUI_YahooImageSearch_MVVM */,
+				31C454752F2DA698005D9B83 /* SwiftUI_YahooImageSearch_MVVMTests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
 		318549142F2D108F009BA0B2 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		31C454742F2DA698005D9B83 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -135,7 +195,22 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		31C454722F2DA698005D9B83 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		31C4547B2F2DA698005D9B83 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 318549152F2D108F009BA0B2 /* SwiftUI_YahooImageSearch_MVVM */;
+			targetProxy = 31C4547A2F2DA698005D9B83 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		3185491F2F2D1091009BA0B2 /* Debug */ = {
@@ -325,6 +400,46 @@
 			};
 			name = Release;
 		};
+		31C4547D2F2DA698005D9B83 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "net.deskplate.SwiftUI-YahooImageSearch-MVVMTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/SwiftUI_YahooImageSearch_MVVM.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/SwiftUI_YahooImageSearch_MVVM";
+			};
+			name = Debug;
+		};
+		31C4547E2F2DA698005D9B83 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "net.deskplate.SwiftUI-YahooImageSearch-MVVMTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/SwiftUI_YahooImageSearch_MVVM.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/SwiftUI_YahooImageSearch_MVVM";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -342,6 +457,15 @@
 			buildConfigurations = (
 				318549222F2D1091009BA0B2 /* Debug */,
 				318549232F2D1091009BA0B2 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		31C4547C2F2DA698005D9B83 /* Build configuration list for PBXNativeTarget "SwiftUI_YahooImageSearch_MVVMTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				31C4547D2F2DA698005D9B83 /* Debug */,
+				31C4547E2F2DA698005D9B83 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

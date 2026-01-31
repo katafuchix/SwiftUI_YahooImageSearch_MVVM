@@ -11,7 +11,7 @@ import ActivityIndicatorView
 
 struct ContentView: View {
     // ViewModelを初期化
-    @StateObject private var viewModel = ImageSearchViewModel()
+    @StateObject private var viewModel = ImageSearchViewModel(searchProtocol: ImageLoader())
     
     var body: some View {
         // ZStackで背面と前面を分ける
