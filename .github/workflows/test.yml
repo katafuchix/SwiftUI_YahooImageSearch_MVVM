@@ -11,8 +11,10 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Select Xcode
-        # 現在の最新安定版（Xcode 16系）を自動で選択させます
-        run: sudo xcode-select -s /Applications/Xcode_16.app/Contents/Developer
+          # サーバーに入っている最も新しいXcodeのパスを探して設定する
+          LATEST_XCODE=$(ls /Applications | grep Xcode | sort -V | tail -1)
+          echo "Using Xcode: $LATEST_XCODE"
+          sudo xcode-select -s "/Applications/$LATEST_XCODE/Contents/Developer"
       - name: Run Tests
         run: |
           # 利用可能なシミュレーターを1つ自動取得して変数に入れる
