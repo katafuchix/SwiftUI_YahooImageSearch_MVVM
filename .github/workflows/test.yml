@@ -40,22 +40,26 @@ jobs:
             -enableCodeCoverage YES \
             -quiet
 
-          # カバレッジ表示（全方位スキャン）
-          echo "--- Searching for Coverage Results ---"
+
+          # 2. 全ディレクトリから「今日」作られた .xcresult を力技で探す
+          echo "--- 🕵️ Deep Scanning for .xcresult ---"
           
-          # 可能性のある3つのルートをすべて変数に入れる
-          SEARCH_PATHS="./.build ./build ~/Library/Developer/Xcode/DerivedData"
-          
-          # 存在する最新の .xcresult を見つける
-          RESULT_PATH=$(find $SEARCH_PATHS -name "*.xcresult" -type d 2>/dev/null | xargs ls -td 2>/dev/null | head -n 1)
+          # システム全体（ユーザーディレクトリ以下すべて）から xcresult を検索
+          # 作成時間が新しい順にソートして、一番上のものを取得
+          RESULT_PATH=$(find /Users/runner -name "*.xcresult" -type d 2>/dev/null | xargs ls -td 2>/dev/null | head -n 1)
+
+          if [ -z "$RESULT_PATH" ]; then
+            echo "--- ⚠️ Root search for backup ---"
+            # 万が一に備え、カレントディレクトリ以下も再検索
+            RESULT_PATH=$(find . -name "*.xcresult" -type d 2>/dev/null | xargs ls -td 2>/dev/null | head -n 1)
+          fi
 
           if [ -n "$RESULT_PATH" ]; then
             echo "✅ Found at: $RESULT_PATH"
             echo "--- Code Coverage Summary ---"
-            xcrun xccov view --report "$RESULT_PATH" | grep ".swift:" | grep -v "Tests.swift:" || true
+            xcrun xccov view --report "$RESULT_PATH" | grep ".swift:" | grep -v "Tests.swift:" || echo "Coverage data is empty."
           else
-            echo "❌ Error: .xcresult not found in any expected location."
-            echo "Dumping all directory structures for rescue:"
-            find . -maxdepth 3 -type d
-            ls -d ~/Library/Developer/Xcode/DerivedData/* 2>/dev/null || echo "DerivedData is empty"
+            echo "❌ FATAL: .xcresult is nowhere to be found."
+            echo "--- Debug: List all directories modified in the last 5 minutes ---"
+            find /Users/runner -mmin -5 -type d -maxdepth 5 2>/dev/null
           fi
