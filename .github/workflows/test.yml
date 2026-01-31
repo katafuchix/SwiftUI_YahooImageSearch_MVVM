@@ -11,6 +11,14 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       
+      - name: Cache Swift Packages
+        uses: actions/cache@v4
+        with:
+          path: .build
+          key: ${{ runner.os }}-spm-${{ hashFiles('**/Package.resolved') }}
+          restore-keys: |
+            ${{ runner.os }}-spm-
+      
       - name: Select Latest Xcode
         run: |
           # サーバー内の最新Xcodeを探して設定
