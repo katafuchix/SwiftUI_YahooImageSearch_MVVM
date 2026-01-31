@@ -42,9 +42,8 @@ jobs:
           if [ -n "$RESULT_PATH" ]; then
             # xcrunの結果をパイプで繋いで、不要な行を削る
             xcrun xccov view --report "$RESULT_PATH" | \
-              grep ".swift:" | \
-              grep -v "Tests.swift:" | \
-              grep -v ".build/checkouts" || true
+              grep "SwiftUI_YahooImageSearch_MVVM" | \
+              grep -v "Tests.swift:" || true
           else
             echo "❌ xcresult not found"
           fi
