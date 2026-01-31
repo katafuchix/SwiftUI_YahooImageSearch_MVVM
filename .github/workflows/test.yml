@@ -21,10 +21,10 @@ jobs:
       - name: Run Tests
         run: |
           # 利用可能なシミュレーターを1つ自動取得して変数に入れる
-          DESTINATION=$(xcrun simctl list devices available | grep "iPhone" | head -1 | sed -e 's/ (.*//' -e 's/^[ \t]*//')
-          echo "Selected Destination: $DESTINATION"
+          # DESTINATION=$(xcrun simctl list devices available | grep "iPhone" | head -1 | sed -e 's/ (.*//' -e 's/^[ \t]*//')
+          # echo "Selected Destination: $DESTINATION"
           xcodebuild test \
             -project SwiftUI_YahooImageSearch_MVVM.xcodeproj \
             -scheme SwiftUI_YahooImageSearch_MVVM \
-            -destination 'platform=iOS Simulator,name=$DESTINATION'
+            -destination 'platform=iOS Simulator,name=iPhone 17,OS=26.2'
             -quiet
