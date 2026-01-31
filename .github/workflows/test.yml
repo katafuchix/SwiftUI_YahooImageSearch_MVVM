@@ -35,4 +35,5 @@ jobs:
             -project SwiftUI_YahooImageSearch_MVVM.xcodeproj \
             -scheme SwiftUI_YahooImageSearch_MVVM \
             -destination 'platform=iOS Simulator,name=iPhone 17,OS=26.2,arch=arm64' \
+            -enableCodeCoverage YES \
             -quiet
