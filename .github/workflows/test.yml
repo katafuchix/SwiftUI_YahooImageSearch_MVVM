@@ -14,7 +14,7 @@ jobs:
       - name: Cache Swift Packages
         uses: actions/cache@v4
         with:
-          path: ~/Library/Developer/Xcode/DerivedData
+          path: ./DerivedData
           key: ${{ runner.os }}-xcode-deriveddata-${{ hashFiles('**/Package.resolved') }}
           restore-keys: |
             ${{ runner.os }}-xcode-deriveddata-
@@ -35,10 +35,10 @@ jobs:
             -project SwiftUI_YahooImageSearch_MVVM.xcodeproj \
             -scheme SwiftUI_YahooImageSearch_MVVM \
             -destination 'platform=iOS Simulator,name=iPhone 17,OS=26.2,arch=arm64' \
+            -derivedDataPath ./DerivedData \
             -enableCodeCoverage YES \
             -quiet
 
-          # 2. デフォルトの出力場所（DerivedData）からカバレッジを表示
-          echo "--- Code Coverage Report ---"
-          # 最新のテスト結果を探して表示するコマンド
-          xcrun xccov view --report $(ls -td ~/Library/Developer/Xcode/DerivedData/*/Logs/Test/*.xcresult | head -1)
+          # ログをスッキリさせて、アプリ本体のファイルだけ表示
+          echo "--- Code Coverage Summary ---"
+          xcrun xccov view --report ./DerivedData/Logs/Test/*.xcresult | grep ".swift:" | grep -v "Tests.swift:"
