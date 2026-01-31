@@ -11,7 +11,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Select Xcode
-        run: sudo xcode-select -s /Applications/Xcode_15.4.app # 使用するバージョンに合わせる
+        # 現在の最新安定版（Xcode 16系）を自動で選択させます
+        run: sudo xcode-select -s /Applications/Xcode_16.app/Contents/Developer
       - name: Run Tests
         run: |
           xcodebuild test \
