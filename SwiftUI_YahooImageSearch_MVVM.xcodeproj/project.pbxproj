@@ -24,6 +24,7 @@
 /* Begin PBXFileReference section */
 		318549162F2D1090009BA0B2 /* SwiftUI_YahooImageSearch_MVVM.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SwiftUI_YahooImageSearch_MVVM.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		31C454762F2DA698005D9B83 /* SwiftUI_YahooImageSearch_MVVMTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SwiftUI_YahooImageSearch_MVVMTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		31C454872F2DE99B005D9B83 /* SwiftUI_YahooImageSearch_MVVM.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = SwiftUI_YahooImageSearch_MVVM.xctestplan; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -62,6 +63,7 @@
 		3185490D2F2D108F009BA0B2 = {
 			isa = PBXGroup;
 			children = (
+				31C454872F2DE99B005D9B83 /* SwiftUI_YahooImageSearch_MVVM.xctestplan */,
 				318549182F2D1090009BA0B2 /* SwiftUI_YahooImageSearch_MVVM */,
 				31C454772F2DA698005D9B83 /* SwiftUI_YahooImageSearch_MVVMTests */,
 				318549172F2D1090009BA0B2 /* Products */,

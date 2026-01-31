@@ -1,0 +1,30 @@
+{
+  "configurations" : [
+    {
+      "id" : "30AB9AFA-4199-4B91-9936-8E6B692F65B0",
+      "name" : "Test Scheme Action",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "performanceAntipatternCheckerEnabled" : true,
+    "targetForVariableExpansion" : {
+      "containerPath" : "container:SwiftUI_YahooImageSearch_MVVM.xcodeproj",
+      "identifier" : "318549152F2D108F009BA0B2",
+      "name" : "SwiftUI_YahooImageSearch_MVVM"
+    }
+  },
+  "testTargets" : [
+    {
+      "parallelizable" : true,
+      "target" : {
+        "containerPath" : "container:SwiftUI_YahooImageSearch_MVVM.xcodeproj",
+        "identifier" : "31C454752F2DA698005D9B83",
+        "name" : "SwiftUI_YahooImageSearch_MVVMTests"
+      }
+    }
+  ],
+  "version" : 1
+}
