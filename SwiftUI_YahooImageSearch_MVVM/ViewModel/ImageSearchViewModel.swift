@@ -8,17 +8,6 @@
 import SwiftUI
 import Combine
 
-protocol ImageSearchProtocol {
-    var imageList: [ImageData] { get }
-    // iOS 15以降用
-    func search(_ query: String) async throws
-    // iOS 15未満用
-    func searchLegacy(_ query: String, completion: @escaping (Result<[ImageData], Error>) -> Void)
-}
-
-// 既存の ImageLoader を適合させる
-extension ImageLoader: ImageSearchProtocol { }
-
 @MainActor // await から戻ってきた後の処理は自動的にメインスレッドで実行
 class ImageSearchViewModel: ObservableObject {
     // Viewから参照する状態

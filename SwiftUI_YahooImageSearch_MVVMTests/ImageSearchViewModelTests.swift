@@ -68,22 +68,29 @@ class ImageSearchViewModelTests: XCTestCase {
 
     // 3. iOS 15未満の Legacy 検索ロジックのテスト
     func testPerformSearchLegacy() {
+        // 1. 準備：Mockに「期待するデータ」を仕込む
+        let expectedData = [ImageData(url: URL(string: "https://example.com/test.jpg")!)]
+        mockProtocol.imageList = expectedData // Mockのプロパティにセット
+        
         let expectation = XCTestExpectation(description: "Legacy検索の完了待ち")
         
-        // 検索完了フラグを監視
+        // 2. 監視
         viewModel.$hasSearched
             .dropFirst()
             .filter { $0 == true }
             .sink { _ in expectation.fulfill() }
             .store(in: &cancellables)
         
-        // 強制的にLegacyを叩く（テスト環境が最新OSでもロジックを検証するため）
-        // privateメソッドの場合は、テスト用に internal にするか、search()経由で検証します
+        // 3. 実行
         viewModel.search()
         
         wait(for: [expectation], timeout: 2.0)
         
+        // 4. 検証（ここが重要！）
         XCTAssertTrue(viewModel.hasSearched)
+        // Mockに渡したデータが、ちゃんとViewModelのリストに入っているか確認
+        XCTAssertEqual(viewModel.imageDatas.count, 1)
+        XCTAssertEqual(viewModel.imageDatas.first?.url.absoluteString, "https://example.com/test.jpg")
         XCTAssertFalse(viewModel.showLoadingIndicator)
     }
 }
@@ -91,13 +98,20 @@ class ImageSearchViewModelTests: XCTestCase {
 // MARK: - Test Helpers
 class MockImageSearchProtocol: ImageSearchProtocol {
     var imageList: [ImageData] = []
+    var errorToThrow: Error? // エラーテスト用
     
     func search(_ query: String) async throws {
-        // 成功をシミュレート（必要ならここで throws させてエラーテストも可能）
+        if let error = errorToThrow { throw error }
+        // 本来はImageLoaderがimageListを更新する挙動をシミュレート
+        // ViewModelがloader.imageListを見ているなら、ここで値をセットする
     }
     
     func searchLegacy(_ query: String, completion: @escaping (Result<[ImageData], Error>) -> Void) {
         // 即座に成功を返す
-        completion(.success(imageList))
+        if let error = errorToThrow {
+            completion(.failure(error))
+        } else {
+            completion(.success(imageList))
+        }
     }
 }

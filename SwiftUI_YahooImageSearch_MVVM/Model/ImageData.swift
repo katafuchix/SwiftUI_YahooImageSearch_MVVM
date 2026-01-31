@@ -11,7 +11,7 @@ import UIKit
 // 表示データ用モデル
 // QGridで表示するためにはIdentifiableが必要
 
-struct ImageData: Identifiable, Hashable {
+struct ImageData: Identifiable, Hashable, Sendable {
     var id = UUID()
     let url: URL
 
