@@ -14,7 +14,7 @@ jobs:
       - name: Cache Swift Packages
         uses: actions/cache@v4
         with:
-          path: .build
+          path: ~/Library/Developer/Xcode/DerivedData/SourcePackages
           key: ${{ runner.os }}-spm-${{ hashFiles('**/Package.resolved') }}
           restore-keys: |
             ${{ runner.os }}-spm-
