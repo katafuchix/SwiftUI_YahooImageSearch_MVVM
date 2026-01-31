@@ -40,16 +40,22 @@ jobs:
             -enableCodeCoverage YES \
             -quiet
 
-          # カバレッジ表示（パスを直接・確実に指定）
-          echo "--- Code Coverage Summary ---"
+          # カバレッジ表示（全方位スキャン）
+          echo "--- Searching for Coverage Results ---"
           
-          # GitHub Actionsの標準的なDerivedDataパスを直接指定して最新の.xcresultを拾う
-          RESULT_PATH=$(ls -td /Users/runner/Library/Developer/Xcode/DerivedData/*/Logs/Test/*.xcresult 2>/dev/null | head -1)
+          # 可能性のある3つのルートをすべて変数に入れる
+          SEARCH_PATHS="./.build ./build ~/Library/Developer/Xcode/DerivedData"
+          
+          # 存在する最新の .xcresult を見つける
+          RESULT_PATH=$(find $SEARCH_PATHS -name "*.xcresult" -type d 2>/dev/null | xargs ls -td 2>/dev/null | head -n 1)
 
-          if [ -n "$RESULT_PATH" ] && [ -d "$RESULT_PATH" ]; then
-            echo "Found: $RESULT_PATH"
+          if [ -n "$RESULT_PATH" ]; then
+            echo "✅ Found at: $RESULT_PATH"
+            echo "--- Code Coverage Summary ---"
             xcrun xccov view --report "$RESULT_PATH" | grep ".swift:" | grep -v "Tests.swift:" || true
           else
-            echo "Error: .xcresult not found. Listing DerivedData for debug:"
-            ls -R ~/Library/Developer/Xcode/DerivedData/ 2>/dev/null | grep ".xcresult" || echo "No .xcresult files in DerivedData at all."
+            echo "❌ Error: .xcresult not found in any expected location."
+            echo "Dumping all directory structures for rescue:"
+            find . -maxdepth 3 -type d
+            ls -d ~/Library/Developer/Xcode/DerivedData/* 2>/dev/null || echo "DerivedData is empty"
           fi
