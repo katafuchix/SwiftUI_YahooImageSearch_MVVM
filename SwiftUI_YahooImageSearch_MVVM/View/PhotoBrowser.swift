@@ -43,7 +43,7 @@ private struct SinglePageContent: View {
                 .resizable()
                 .aspectRatio(contentMode: .fit)
                 .scaleEffect(scale)
-                // ズームジェスチャー ---
+                // ズームジェスチャー
                 .gesture(
                     MagnificationGesture()
                         .onChanged { value in scale = lastScale * value }
@@ -52,7 +52,7 @@ private struct SinglePageContent: View {
                             if scale < 1.0 { withAnimation { scale = 1.0; lastScale = 1.0 } }
                         }
                 )
-                // ダブルタップリセット ---
+                // ダブルタップリセット
                 .onTapGesture(count: 2) {
                     withAnimation { scale = 1.0; lastScale = 1.0 }
                 }
@@ -68,12 +68,12 @@ private struct SinglePageContent: View {
                     .transition(.opacity.combined(with: .scale))
                     .zIndex(1) // 最前面に
             }
-            // ロード中インジケーター ---
+            // ロード中インジケーター
             if !container.isLoaded {
                 ProgressView().tint(.white)
             }
         }
-        // 保存メニュー（長押し） ---
+        // 保存メニュー（長押し）
         .contextMenu {
             if container.isLoaded {
                 Button {
