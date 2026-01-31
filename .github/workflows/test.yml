@@ -11,14 +11,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       
-      - name: Cache Swift Packages
-        uses: actions/cache@v4
-        with:
-          path: .build
-          key: ${{ runner.os }}-spm-${{ hashFiles('**/Package.resolved') }}
-          restore-keys: |
-            ${{ runner.os }}-spm-
-      
       - name: Select Latest Xcode
         run: |
           # サーバー内の最新Xcodeを探して設定
@@ -35,31 +27,10 @@ jobs:
             -project SwiftUI_YahooImageSearch_MVVM.xcodeproj \
             -scheme SwiftUI_YahooImageSearch_MVVM \
             -destination 'platform=iOS Simulator,name=iPhone 17,OS=26.2,arch=arm64' \
-            -clonedSourcePackagesDirPath .build \
-            -derivedDataPath ./DerivedData \
             -enableCodeCoverage YES \
             -quiet
-
-
-          # 2. 全ディレクトリから「今日」作られた .xcresult を力技で探す
-          echo "--- 🕵️ Deep Scanning for .xcresult ---"
-          
-          # システム全体（ユーザーディレクトリ以下すべて）から xcresult を検索
-          # 作成時間が新しい順にソートして、一番上のものを取得
-          RESULT_PATH=$(find /Users/runner -name "*.xcresult" -type d 2>/dev/null | xargs ls -td 2>/dev/null | head -n 1)
-
-          if [ -z "$RESULT_PATH" ]; then
-            echo "--- ⚠️ Root search for backup ---"
-            # 万が一に備え、カレントディレクトリ以下も再検索
-            RESULT_PATH=$(find . -name "*.xcresult" -type d 2>/dev/null | xargs ls -td 2>/dev/null | head -n 1)
-          fi
-
-          if [ -n "$RESULT_PATH" ]; then
-            echo "✅ Found at: $RESULT_PATH"
-            echo "--- Code Coverage Summary ---"
-            xcrun xccov view --report "$RESULT_PATH" | grep ".swift:" | grep -v "Tests.swift:" || echo "Coverage data is empty."
-          else
-            echo "❌ FATAL: .xcresult is nowhere to be found."
-            echo "--- Debug: List all directories modified in the last 5 minutes ---"
-            find /Users/runner -mmin -5 -type d -maxdepth 5 2>/dev/null
-          fi
+  
+          # 2. デフォルトの出力場所（DerivedData）からカバレッジを表示
+          echo "--- Code Coverage Report ---"
+          # 最新のテスト結果を探して表示するコマンド
+          xcrun xccov view --report $(ls -td ~/Library/Developer/Xcode/DerivedData/*/Logs/Test/*.xcresult | head -1)
