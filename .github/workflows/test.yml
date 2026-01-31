@@ -40,7 +40,7 @@ jobs:
           RESULT_PATH=$(ls -td ~/Library/Developer/Xcode/DerivedData/*/Logs/Test/*.xcresult 2>/dev/null | head -1)
           
           if [ -n "$RESULT_PATH" ]; then
-            # xcrunの結果をパイプで繋いで、不要な行を削る
+            # xcrunの結果をパイプで繋いで、不要な行を削る 
             xcrun xccov view --report "$RESULT_PATH" | \
               grep "SwiftUI_YahooImageSearch_MVVM" | \
               grep -v "Tests.swift:" || true
