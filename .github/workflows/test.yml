@@ -42,8 +42,24 @@ jobs:
 
           # ログをスッキリさせて、アプリ本体のファイルだけ表示
           echo "--- Code Coverage Summary ---"
-          # 余計なパス指定をせず、今作られた xcresult を自動で見つけ出す
-          RESULT_PATH=$(find ~/Library/Developer/Xcode/DerivedData -name "*.xcresult" -type d | head -n 1)
-          if [ -n "$RESULT_PATH" ]; then
-            xcrun xccov view --report "$RESULT_PATH" | grep ".swift:" | grep -v "Tests.swift:" || true
+          
+          # OBJROOTからDerivedDataの深い階層のベースパスを取得
+          DERIVED_DATA_BASE=$(xcodebuild -project SwiftUI_YahooImageSearch_MVVM.xcodeproj -showBuildSettings | grep -m 1 "OBJROOT" | awk '{print $3}')
+          
+          # 実際の.xcresultフォルダをfindで確実に特定
+          RESULT_PATH=$(find "$DERIVED_DATA_BASE/../../Logs/Test" -name "*.xcresult" -type d | head -n 1)
+
+          if [ -d "$RESULT_PATH" ]; then
+            echo "Found xcresult at: $RESULT_PATH"
+            # grep結果が空でも正常終了させる
+            xcrun xccov view --report "$RESULT_PATH" | grep ".swift:" | grep -v "Tests.swift:" || echo "No matching swift files for coverage."
+          else
+            echo "Warning: .xcresult folder not found. Path checked: $DERIVED_DATA_BASE"
+            # 念のため、標準の場所を最後に1回だけ探しに行く
+            BACKUP_PATH=$(ls -td ~/Library/Developer/Xcode/DerivedData/*/Logs/Test/*.xcresult 2>/dev/null | head -1)
+            if [ -n "$BACKUP_PATH" ]; then
+                xcrun xccov view --report "$BACKUP_PATH" | grep ".swift:" | grep -v "Tests.swift:" || true
+            else
+                echo "Error: Could not find coverage data in any location."
+            fi
           fi
