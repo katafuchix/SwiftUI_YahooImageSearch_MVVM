@@ -41,4 +41,13 @@ jobs:
 
           # ログをスッキリさせて、アプリ本体のファイルだけ表示
           echo "--- Code Coverage Summary ---"
-          xcrun xccov view --report ./DerivedData/Logs/Test/*.xcresult | grep ".swift:" | grep -v "Tests.swift:"
+          # 階層を問わず .xcresult フォルダを探し出す
+          RESULT_PATH=$(find ./DerivedData -name "*.xcresult" -type d | head -n 1)
+          
+          if [ -n "$RESULT_PATH" ]; then
+            # grepが空でも終了ステータスを0(成功)にするために || true を追加
+            xcrun xccov view --report "$RESULT_PATH" | grep ".swift:" | grep -v "Tests.swift:" || true
+          else
+            echo "Error: .xcresult folder not found in ./DerivedData"
+            exit 1
+          fi
