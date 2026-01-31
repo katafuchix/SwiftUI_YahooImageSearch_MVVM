@@ -14,7 +14,7 @@ jobs:
       - name: Cache Swift Packages
         uses: actions/cache@v4
         with:
-          path: ~/Library/Developer/Xcode/DerivedData/SourcePackages
+          path: .build
           key: ${{ runner.os }}-spm-${{ hashFiles('**/Package.resolved') }}
           restore-keys: |
             ${{ runner.os }}-spm-
@@ -35,19 +35,15 @@ jobs:
             -project SwiftUI_YahooImageSearch_MVVM.xcodeproj \
             -scheme SwiftUI_YahooImageSearch_MVVM \
             -destination 'platform=iOS Simulator,name=iPhone 17,OS=26.2,arch=arm64' \
+            -clonedSourcePackagesDirPath .build \
             -derivedDataPath ./DerivedData \
             -enableCodeCoverage YES \
             -quiet
 
           # ログをスッキリさせて、アプリ本体のファイルだけ表示
           echo "--- Code Coverage Summary ---"
-          # 階層を問わず .xcresult フォルダを探し出す
-          RESULT_PATH=$(find ./DerivedData -name "*.xcresult" -type d | head -n 1)
-          
+          # 余計なパス指定をせず、今作られた xcresult を自動で見つけ出す
+          RESULT_PATH=$(find ~/Library/Developer/Xcode/DerivedData -name "*.xcresult" -type d | head -n 1)
           if [ -n "$RESULT_PATH" ]; then
-            # grepが空でも終了ステータスを0(成功)にするために || true を追加
             xcrun xccov view --report "$RESULT_PATH" | grep ".swift:" | grep -v "Tests.swift:" || true
-          else
-            echo "Error: .xcresult folder not found in ./DerivedData"
-            exit 1
           fi
