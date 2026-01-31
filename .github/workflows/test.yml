@@ -33,4 +33,18 @@ jobs:
           # 2. デフォルトの出力場所（DerivedData）からカバレッジを表示
           echo "--- Code Coverage Report ---"
           # 最新のテスト結果を探して表示するコマンド
-          xcrun xccov view --report $(ls -td ~/Library/Developer/Xcode/DerivedData/*/Logs/Test/*.xcresult | head -1)
+          #xcrun xccov view --report $(ls -td ~/Library/Developer/Xcode/DerivedData/*/Logs/Test/*.xcresult | head -1)
+
+          echo "--- Code Coverage Report (Filtered) ---"
+          # 最新のxcresultを取得
+          RESULT_PATH=$(ls -td ~/Library/Developer/Xcode/DerivedData/*/Logs/Test/*.xcresult 2>/dev/null | head -1)
+          
+          if [ -n "$RESULT_PATH" ]; then
+            # xcrunの結果をパイプで繋いで、不要な行を削る
+            xcrun xccov view --report "$RESULT_PATH" | \
+              grep ".swift:" | \
+              grep -v "Tests.swift:" | \
+              grep -v ".build/checkouts"
+          else
+            echo "❌ xcresult not found"
+          fi
