@@ -42,6 +42,7 @@ class ImageSearchViewModelTests: XCTestCase {
         let testData = [ImageData(url: URL(string: "https://deskplate.net/images/logo_deskplate.jpg")!)]
         mockProtocol.imageList = testData
         
+        /*
         // 2. 検索完了（hasSearched が true になる）を待つための準備
         let expectation = XCTestExpectation(description: "検索完了待ち")
         
@@ -59,6 +60,11 @@ class ImageSearchViewModelTests: XCTestCase {
         // 4. ここで最大5秒間、expectation が fulfill されるのを待機する
         await fulfillment(of: [expectation], timeout: 5.0)
         cancellable.cancel()
+        */
+        
+        // 2. 実行：Taskを介さず、直接 await で完了を待つ
+        // これなら待ち時間は「通信（モック）にかかる実時間」だけになります！
+        await viewModel.performSearchAsync()
         
         // 5. 状態の検証（ここに来る頃には、Task内の処理が終わっている）
         XCTAssertTrue(viewModel.hasSearched)
@@ -82,9 +88,13 @@ class ImageSearchViewModelTests: XCTestCase {
             .store(in: &cancellables)
         
         // 3. 実行
-        viewModel.search()
+        //viewModel.search()
         
-        wait(for: [expectation], timeout: 2.0)
+        // 3. 実行：search() ではなく直接ロジックを叩く
+        // これなら UIApplication.shared などの UI 処理に邪魔されずロジックだけ動きます
+        viewModel.performSearchLegacy()
+        
+        wait(for: [expectation], timeout: 1.0)
         
         // 4. 検証（ここが重要！）
         XCTAssertTrue(viewModel.hasSearched)

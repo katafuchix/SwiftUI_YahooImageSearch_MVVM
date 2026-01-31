@@ -65,7 +65,7 @@ class ImageSearchViewModel: ObservableObject {
     }
     
     // MARK: - 検索ロジック (iOS 15+)
-    private func performSearchAsync() async {
+    func performSearchAsync() async {
         self.imageDatas = []
         self.showLoadingIndicator = true
         self.hasSearched = false
@@ -83,7 +83,7 @@ class ImageSearchViewModel: ObservableObject {
     }
 
     // MARK: - 検索ロジック (iOS 15以前)
-    private func performSearchLegacy() {
+    func performSearchLegacy() {
         self.imageDatas = []
         self.showLoadingIndicator = true
         self.hasSearched = false
