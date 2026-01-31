@@ -38,7 +38,8 @@ jobs:
             -enableCodeCoverage YES \
             -quiet
 
-      - name: Show Coverage Report
-        uses: sersoft-gmbh/xccov-action@v3
-        with:
-          path: TestResults.xcresult  # 上で指定したパスと同じにする
+          # --- ここでカバレッジをログに書き出す ---
+          echo "--- Code Coverage Report ---"
+          xcrun xccov view --report --json TestResults.xcresult > coverage.json
+          # JSONから主要な数字だけを抽出して表示（シンプルに表示する場合）
+          xcrun xccov view --report TestResults.xcresult
