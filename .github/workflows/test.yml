@@ -38,8 +38,7 @@ jobs:
             -enableCodeCoverage YES \
             -quiet
 
-          # --- ここでカバレッジをログに書き出す ---
+          # 2. デフォルトの出力場所（DerivedData）からカバレッジを表示
           echo "--- Code Coverage Report ---"
-          xcrun xccov view --report --json TestResults.xcresult > coverage.json
-          # JSONから主要な数字だけを抽出して表示（シンプルに表示する場合）
-          xcrun xccov view --report TestResults.xcresult
+          # 最新のテスト結果を探して表示するコマンド
+          xcrun xccov view --report $(ls -td ~/Library/Developer/Xcode/DerivedData/*/Logs/Test/*.xcresult | head -1)
