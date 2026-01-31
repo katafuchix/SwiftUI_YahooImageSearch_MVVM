@@ -16,20 +16,9 @@ struct ImageDetailView: View {
         ZStack(alignment: .topTrailing) {
             Color.black.ignoresSafeArea()
 
-            // imagesが空でないことを確認
-            if !images.isEmpty {
-                TabView(selection: $selectedImage) {
-                    ForEach(images, id: \.url) { data in
-                        FullSizeImageView(url: data.url)
-                            // ここで確実に型を合わせる（Optionalへのキャスト）
-                            .tag(Optional(data))
-                    }
-                }
-                .tabViewStyle(.page(indexDisplayMode: .always))
+            // 呼び出し側はこれだけ（SKPhoto風のシンプルさ）
+            PhotoBrowser(images: images, selectedImage: $selectedImage)
                 .ignoresSafeArea()
-            } else {
-                Text("データがありません").foregroundColor(.white)
-            }
 
             // 閉じるボタン
             Button { dismiss() } label: {

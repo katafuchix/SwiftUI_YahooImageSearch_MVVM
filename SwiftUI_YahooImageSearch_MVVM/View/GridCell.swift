@@ -35,29 +35,3 @@ struct GridCell: View {
         }
     }
 }
-
-// ObservableObjectを継承したデータモデル
-final class ImageContainer: ObservableObject {
-
-    // @PublishedをつけるとSwiftUIのViewへデータが更新されたことを通知してくれる
-    @Published var image = UIImage(systemName: "photo")!
-    @Published var isLoaded = false
-    private let url: URL
-
-    init(from url: URL) {
-        self.url = url
-    }
-
-    func load() {
-        guard !isLoaded else { return } // 二重ロード防止
-        
-        URLSession.shared.dataTask(with: url) { [weak self] data, _, _ in
-            guard let data = data, let networkImage = UIImage(data: data) else { return }
-            DispatchQueue.main.async {
-                // 宣言時に@Publishedを付けているので、プロパティを更新すればView側に更新が通知される
-                self?.image = networkImage
-                self?.isLoaded = true
-            }
-        }.resume()
-    }
-}
