@@ -10,11 +10,14 @@ jobs:
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Select Xcode
-          # サーバーに入っている最も新しいXcodeのパスを探して設定する
+      
+      - name: Select Latest Xcode
+        run: |
+          # サーバー内の最新Xcodeを探して設定
           LATEST_XCODE=$(ls /Applications | grep Xcode | sort -V | tail -1)
           echo "Using Xcode: $LATEST_XCODE"
           sudo xcode-select -s "/Applications/$LATEST_XCODE/Contents/Developer"
+          
       - name: Run Tests
         run: |
           # 利用可能なシミュレーターを1つ自動取得して変数に入れる
