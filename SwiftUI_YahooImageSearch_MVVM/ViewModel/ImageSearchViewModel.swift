@@ -6,61 +6,80 @@
 //
 
 import SwiftUI
-import Combine
+import Observation
 
 @MainActor // await から戻ってきた後の処理は自動的にメインスレッドで実行
-class ImageSearchViewModel: ObservableObject {
+@Observable
+class ImageSearchViewModel {
     // Viewから参照する状態
-    @Published var searchText = ""
-    @Published var imageDatas = [ImageData]()
-    @Published var isLoading = false
-    @Published var showLoadingIndicator = false
-    @Published var isButtonEnabled = false
-    @Published var hasSearched = false // 一度でも検索を実行したか
-    @Published var selectedImageData: ImageData? = nil // これが非nilなら全画面表示
-    @Published var isShowingDetail = false // 全画面表示のフラグ
+    // Viewから参照する状態
+    var searchText = "" {
+        didSet {
+            updateButtonEnabled()
+            scheduleDebouncedSearch(oldValue: oldValue)
+        }
+    }
+    var imageDatas = [ImageData]()
+    var isLoading = false
+    var showLoadingIndicator = false
+    var isButtonEnabled = false
+    var hasSearched = false // 一度でも検索を実行したか
+    var selectedImageData: ImageData? = nil // これが非nilなら全画面表示
+    var isShowingDetail = false // 全画面表示のフラグ
     
-    private var cancellables = Set<AnyCancellable>()
+    private var debounceTask: Task<Void, Never>?
     private let searchProtocol: ImageSearchProtocol // 外から差し替え可能に
     
     init(searchProtocol: ImageSearchProtocol) {
         self.searchProtocol = searchProtocol
-        
-        // テキストの変更を監視してボタンの有効化を判定
-        $searchText
-            .map { $0.count >= 3 }
-            .assign(to: \.isButtonEnabled, on: self)
-            .store(in: &cancellables)
-        
-        // Debounce機能の追加
-        $searchText
-            .dropFirst() // 初期値（空文字）での発火を防ぐ
-            .debounce(for: .milliseconds(500), scheduler: RunLoop.main) // 0.5秒待つ
-            .removeDuplicates() // 同じ文字での連続発火を防ぐ
-            .sink { [weak self] _ in
-                // 文字数が足りている場合のみ、自動で検索を実行
-                if self?.isButtonEnabled == true {
-                    self?.search()
-                }
-            }
-            .store(in: &cancellables)
+        updateButtonEnabled()
     }
     
     static func create() -> ImageSearchViewModel {
         return ImageSearchViewModel(searchProtocol: ImageLoader())
     }
     
+    
+    private func updateButtonEnabled() {
+        isButtonEnabled = searchText.count >= 3
+    }
+    
+    // Combineのdebounceの代わりにTaskで0.5秒待ってから検索する
+    private func scheduleDebouncedSearch(oldValue: String) {
+        // 同じ文字列の場合は何もしない
+        guard oldValue != searchText else {
+            return
+        }
+        
+        // 前回の待機中タスクをキャンセルする
+        debounceTask?.cancel()
+        
+        // 文字数が足りない場合は自動検索しない
+        guard isButtonEnabled else {
+            return
+        }
+        
+        debounceTask = Task { [weak self] in
+            // 0.5秒待つ
+            try? await Task.sleep(nanoseconds: 500_000_000)
+            
+            // キャンセルされていたら検索しない
+            guard !Task.isCancelled else {
+                return
+            }
+            
+            self?.search()
+        }
+    }
+    
+    
     func search() {
-        self.imageDatas = []
+        debounceTask?.cancel()
+        imageDatas = []
         UIApplication.shared.endEditing()
         
-        // ★OSバージョンによる分岐を復活
-        if #available(iOS 15.0, *) {
-            Task {
-                await performSearchAsync()
-            }
-        } else {
-            performSearchLegacy()
+        Task {
+            await performSearchAsync()
         }
     }
     
@@ -80,27 +99,5 @@ class ImageSearchViewModel: ObservableObject {
         // do-catchの外に書くことで、確実に実行される
         self.showLoadingIndicator = false
         self.hasSearched = true
-    }
-
-    // MARK: - 検索ロジック (iOS 15以前)
-    func performSearchLegacy() {
-        self.imageDatas = []
-        self.showLoadingIndicator = true
-        self.hasSearched = false
-        
-        searchProtocol.searchLegacy(searchText) { [weak self] result in
-            // iOS 15以前 UI更新はメインスレッドで実行
-            DispatchQueue.main.async {
-                guard let self = self else { return }
-                switch result {
-                case .success(let fetchedImages):
-                    self.imageDatas = fetchedImages
-                case .failure(let error):
-                    print("Search Legacy Error: \(error)")
-                }
-                self.showLoadingIndicator = false
-                self.hasSearched = true
-            }
-        }
     }
 }

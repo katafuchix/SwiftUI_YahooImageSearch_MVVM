@@ -71,38 +71,6 @@ class ImageSearchViewModelTests: XCTestCase {
         XCTAssertEqual(viewModel.imageDatas.count, 1, "検索後はデータが1件入っているはず")
         XCTAssertFalse(viewModel.showLoadingIndicator, "完了後はインジケーターが消えているはず")
     }
-
-    // 3. iOS 15未満の Legacy 検索ロジックのテスト
-    func testPerformSearchLegacy() {
-        // 1. 準備：Mockに「期待するデータ」を仕込む
-        let expectedData = [ImageData(url: URL(string: "https://example.com/test.jpg")!)]
-        mockProtocol.imageList = expectedData // Mockのプロパティにセット
-        
-        let expectation = XCTestExpectation(description: "Legacy検索の完了待ち")
-        
-        // 2. 監視
-        viewModel.$hasSearched
-            .dropFirst()
-            .filter { $0 == true }
-            .sink { _ in expectation.fulfill() }
-            .store(in: &cancellables)
-        
-        // 3. 実行
-        //viewModel.search()
-        
-        // 3. 実行：search() ではなく直接ロジックを叩く
-        // これなら UIApplication.shared などの UI 処理に邪魔されずロジックだけ動きます
-        viewModel.performSearchLegacy()
-        
-        wait(for: [expectation], timeout: 1.0)
-        
-        // 4. 検証（ここが重要！）
-        XCTAssertTrue(viewModel.hasSearched)
-        // Mockに渡したデータが、ちゃんとViewModelのリストに入っているか確認
-        XCTAssertEqual(viewModel.imageDatas.count, 1)
-        XCTAssertEqual(viewModel.imageDatas.first?.url.absoluteString, "https://example.com/test.jpg")
-        XCTAssertFalse(viewModel.showLoadingIndicator)
-    }
 }
 
 // MARK: - Test Helpers
